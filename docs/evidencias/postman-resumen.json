@@ -1,6 +1,7 @@
 {
   "runner": "Newman",
-  "profile": "demo (H2)",
+  "profile": "mysql",
+  "database": "MySQL Community 8.4.11 / securitydb",
   "stats": {
     "iterations": {
       "total": 1,

@@ -4,7 +4,33 @@ Aplicación completa de **Spring Security**, con frontend integrado, autenticaci
 
 ![Frontend de Access Lab](docs/capturas/escritorio.png)
 
-## Arranque rápido sin MySQL
+## Arranque completo con MySQL (Windows)
+
+Desde **Git Bash**, en la carpeta del proyecto:
+
+```bash
+cmd.exe //c scripts\\start-lab.cmd
+```
+
+Desde PowerShell:
+
+```powershell
+.\scripts\start-lab.cmd
+```
+
+El script prepara **MySQL Community 8.4.11 oficial**, crea `securitydb` y arranca el frontend y backend en **http://localhost:8080/**. MySQL escucha solo en `127.0.0.1:3307`, sin registrar servicios de Windows ni modificar otras instalaciones. La primera vez descarga aproximadamente 268 MB y necesita Internet y el runtime Visual C++ requerido por MySQL. Necesitas JDK 17 o superior.
+
+Los datos y las claves aleatorias del usuario de base de datos se guardan únicamente en `.cache/mysql/`, ignorado por Git. La aplicación usa `security_lab`, con permisos limitados a las bases del laboratorio. Las cuentas `user`, `admin` y `manager` conservan las claves de demostración indicadas más abajo.
+
+Los procesos siguen funcionando aunque cierres la terminal. Para detenerlos sin borrar los datos:
+
+```bash
+cmd.exe //c scripts\\stop-lab.cmd
+```
+
+Ejecutar nuevamente `start-lab.cmd` reconoce la instancia que ya arrancó. Si el puerto 8080 pertenece a otra instancia, indica que debes cerrarla. Los registros están en `.cache/mysql/app.log` y `.cache/mysql/server.log`.
+
+## Modo alternativo sin MySQL
 
 Necesitas **JDK 17 o superior**, con `JAVA_HOME` apuntando al JDK. Maven se descarga automáticamente mediante el wrapper; la primera ejecución necesita Internet. No necesitas Node para ejecutar la aplicación.
 
@@ -44,7 +70,7 @@ Si tienes Docker, puedes iniciar MySQL y la aplicación juntos:
 docker compose up --build
 ```
 
-Luego abre http://localhost:8080. Docker y MySQL no estaban instalados/activos en el equipo de desarrollo: las verificaciones ejecutadas usaron H2; el flujo Docker queda preparado, sin verificación local.
+Luego abre http://localhost:8080. El laboratorio completo se verificó con MySQL portable en Windows. Docker es una alternativa opcional preparada; no se ejecutó localmente.
 
 ## Cuentas y permisos
 
@@ -87,7 +113,11 @@ Backend, sin necesidad de MySQL:
 .\mvnw.cmd verify
 ```
 
-**32 pruebas verificadas**, incluyendo la matriz de permisos, claves antiguas rechazadas, BCrypt, carga idempotente, perfil autenticado y recursos del frontend.
+**32 pruebas verificadas con H2 y repetidas con MySQL**, incluyendo la matriz de permisos, claves antiguas rechazadas, BCrypt, carga idempotente, perfil autenticado y recursos del frontend. Para ejecutarlas con MySQL portable en una base de pruebas separada (`securitydb_test`):
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/test-mysql.ps1
+```
 
 Navegador y Postman (mantén la aplicación iniciada en modo `demo` en otra terminal):
 
@@ -98,7 +128,7 @@ npm.cmd run test:e2e
 npm.cmd run test:api
 ```
 
-**6 pruebas de navegador verificadas** en Chrome: invitado, login inválido, los tres roles, logout y móvil. Si usas otro puerto, define `E2E_BASE_URL` para el navegador; en Postman cambia `baseUrl`. Para probar con Chrome instalado, define `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` con la ruta a `chrome.exe`.
+**6 pruebas de navegador verificadas** en Chrome con MySQL: invitado, login inválido, los tres roles, logout y móvil. Si usas otro puerto, define `E2E_BASE_URL` para el navegador; en Postman cambia `baseUrl`. Para probar con Chrome instalado, define `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` con la ruta a `chrome.exe`.
 
 Importa [Semana07.postman_collection.json](postman/Semana07.postman_collection.json) en Postman y usa **Run collection**. Incluye 27 solicitudes con aserciones de estado, contenido y perfil; también se ejecuta con Newman mediante `test:api`.
 

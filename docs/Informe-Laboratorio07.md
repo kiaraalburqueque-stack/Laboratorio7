@@ -11,7 +11,7 @@ Implementar autenticación y autorización por roles mediante Spring Security, p
 
 ## Desarrollo de la actividad
 
-1. Se creó un proyecto Maven con Java 17 como versión objetivo, Spring Boot 3.5.6, Spring Web, Spring Security, Spring Data JPA y el controlador de MySQL. H2 se usa exclusivamente en el perfil opcional de demostración y en las pruebas locales.
+1. Se creó un proyecto Maven con Java 17 como versión objetivo, Spring Boot 3.5.6, Spring Web, Spring Security, Spring Data JPA y el controlador de MySQL. Se verificó con MySQL Community 8.4.11 y se conservó H2 como perfil opcional de demostración y alternativa de pruebas.
 2. Se implementaron las entidades `User` y `Role`, relacionadas mediante la tabla `user_roles`, y los repositorios para buscar usuarios y roles por nombre. Las tablas se llaman `users` y `roles` para evitar conflictos con palabras reservadas.
 3. `UserDetailsServiceImpl` consulta al usuario en la base de datos y convierte sus roles en autoridades de Spring Security.
 4. Se cambiaron las rutas: `/admin/panel` pasó a `/management/dashboard`, `/user/dashboard` a `/client/home` y `/public/hello` a `/api/free`. Se actualizaron tanto los controladores como la configuración de seguridad.
@@ -30,9 +30,9 @@ Implementar autenticación y autorización por roles mediante Spring Security, p
 | `/management/dashboard` | 401 | 403 | 200 | 403 |
 | `/manager/reportes` | 401 | 403 | 200 | 200 |
 
-Las pruebas locales del backend y del navegador confirmaron la matriz anterior usando H2. Se ejecutaron 32 pruebas de backend y 6 pruebas de navegador sin fallos. Los resultados de la colección Postman ejecutada con Newman se registran en `docs/Verificacion.md`. No se atribuyen estos resultados a una ejecución gráfica en Postman.
+Las pruebas confirmaron la matriz anterior con MySQL real. Se ejecutaron 32 pruebas de backend y 6 pruebas de navegador sin fallos, además de 27 solicitudes y 42 aserciones de la colección Postman mediante Newman. Los resultados están en `docs/Verificacion.md`. No se atribuyen estos resultados a una ejecución gráfica en Postman.
 
-MySQL se configura mediante `application.properties` y el script `sql/01-create-database.sql`. Como no había un servidor MySQL activo ni Docker disponible en el equipo, la conexión real a MySQL y el arranque con Docker quedan pendientes de comprobar en ese entorno. El perfil H2 permite ejecutar toda la aplicación inmediatamente para la demostración.
+MySQL se configura mediante `application.properties` y el script `sql/01-create-database.sql`. Se preparó MySQL portable dentro del proyecto, escuchando en `127.0.0.1:3307`, con la base `securitydb`, un usuario de aplicación y claves locales aleatorias excluidas de Git. `scripts/start-lab.cmd` arranca MySQL y la aplicación. Las pruebas del backend usan `securitydb_test` para separar los datos de prueba. Se reiniciaron ambos procesos y se confirmó que las tres cuentas y los tres roles persistieron. Docker se ofrece solo como alternativa opcional y no se ejecutó en este equipo.
 
 ## Cinco observaciones
 
@@ -40,7 +40,7 @@ MySQL se configura mediante `application.properties` y el script `sql/01-create-
 2. Cambiar únicamente las rutas en los controladores habría dejado reglas de acceso desactualizadas. Se modificaron conjuntamente los controladores, los filtros y las pruebas.
 3. `hasRole("MANAGER")` requiere una autoridad denominada `ROLE_MANAGER`; conservar el prefijo en la base de datos evita denegaciones por nombres incompatibles.
 4. Crear usuarios solamente cuando no existen no cambia sus contraseñas anteriores. El cargador compara y actualiza los hashes cuando cambia la contraseña configurada, sin duplicar las cuentas.
-5. La ausencia de MySQL activo impidió comprobar localmente ese motor. Se separó un perfil H2 para probar autenticación y permisos, y se documentó esta limitación junto con el procedimiento de MySQL.
+5. Como el equipo no tenía MySQL activo, se preparó una distribución portable oficial. Se utilizó un puerto propio y un usuario limitado a las bases del laboratorio; los usuarios y roles se conservaron al reiniciar el servidor.
 
 ## Cinco conclusiones
 
@@ -48,4 +48,4 @@ MySQL se configura mediante `application.properties` y el script `sql/01-create-
 2. El control de acceso funciona porque se aplica en el backend; ocultar o marcar tarjetas en el frontend sirve para orientar al usuario, pero no sustituye las reglas de Spring Security.
 3. BCrypt permite comprobar contraseñas sin almacenar el texto original. Las pruebas confirmaron los hashes y el rechazo de las contraseñas antiguas.
 4. La matriz de pruebas por rol detecta tanto accesos permitidos como permisos excesivos. Ejecutarla junto con login, logout y errores del frontend aporta evidencia de que ambas partes están integradas.
-5. La separación entre código, configuración, pruebas y documentación facilita reproducir el laboratorio. Para completar la validación específica del motor solicitado se debe ejecutar el mismo proyecto y la colección con MySQL; para un despliegue real también se requiere revisar HTTPS y credenciales de demostración.
+5. La separación entre código, configuración, pruebas y documentación facilita reproducir el laboratorio. La ejecución con MySQL y las pruebas de persistencia completaron la validación del motor solicitado. Para un despliegue real también se requiere revisar HTTPS y credenciales de demostración.
