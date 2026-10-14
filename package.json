@@ -1,0 +1,15 @@
+{
+  "name": "access-lab-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pruebas de navegador para el frontend integrado en Spring Boot",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:api": "newman run postman/Semana07.postman_collection.json",
+    "preview:capture": "node scripts/capture-preview.cjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "newman": "^6.2.1"
+  }
+}

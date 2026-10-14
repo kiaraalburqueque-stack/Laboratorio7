@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -84,6 +85,22 @@ class SecurityApplicationTests {
                 .andExpect(content().string("Bienvenido ADMIN"));
         mvc.perform(get("/manager/reportes").with(httpBasic("manager", "ManagerS07!2026")))
                 .andExpect(content().string("Reportes disponibles para MANAGER"));
+    }
+
+    @Test
+    void profileRequiresAuthentication() throws Exception {
+        mvc.perform(get("/api/me")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/me").with(httpBasic("manager", "ManagerS07!2026")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("manager"))
+                .andExpect(jsonPath("$.roles[0]").value("ROLE_MANAGER"))
+                .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/", "/index.html", "/assets/styles.css", "/assets/app.js", "/favicon.svg"})
+    void frontendIsAvailableWithoutLogin(String path) throws Exception {
+        mvc.perform(get(path)).andExpect(status().isOk());
     }
 
     @Test
