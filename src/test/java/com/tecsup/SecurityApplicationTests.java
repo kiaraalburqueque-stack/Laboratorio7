@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ActiveProfilesResolver;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,8 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("demo")
+@ActiveProfiles(resolver = SecurityApplicationTests.ProfileResolver.class)
 class SecurityApplicationTests {
+    public static class ProfileResolver implements ActiveProfilesResolver {
+        @Override
+        public String[] resolve(Class<?> testClass) {
+            return new String[] {System.getProperty("lab.test.profile", "demo")};
+        }
+    }
     @Autowired MockMvc mvc;
     @Autowired UserRepository users;
     @Autowired RoleRepository roles;
