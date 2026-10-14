@@ -1,0 +1,162 @@
+{
+  "runner": "Newman",
+  "profile": "demo (H2)",
+  "stats": {
+    "iterations": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 27,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 27,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 27,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 27,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 27,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 42,
+      "pending": 0,
+      "failed": 0
+    },
+    "testScripts": {
+      "total": 27,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 0,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "failures": [],
+  "requests": [
+    {
+      "name": "/api/free → 200",
+      "status": 200
+    },
+    {
+      "name": "/client/home → 401",
+      "status": 401
+    },
+    {
+      "name": "/management/dashboard → 401",
+      "status": 401
+    },
+    {
+      "name": "/manager/reportes → 401",
+      "status": 401
+    },
+    {
+      "name": "/api/free → 200",
+      "status": 200
+    },
+    {
+      "name": "/client/home → 200",
+      "status": 200
+    },
+    {
+      "name": "/management/dashboard → 403",
+      "status": 403
+    },
+    {
+      "name": "/manager/reportes → 403",
+      "status": 403
+    },
+    {
+      "name": "/api/free → 200",
+      "status": 200
+    },
+    {
+      "name": "/client/home → 200",
+      "status": 200
+    },
+    {
+      "name": "/management/dashboard → 200",
+      "status": 200
+    },
+    {
+      "name": "/manager/reportes → 200",
+      "status": 200
+    },
+    {
+      "name": "/api/free → 200",
+      "status": 200
+    },
+    {
+      "name": "/client/home → 403",
+      "status": 403
+    },
+    {
+      "name": "/management/dashboard → 403",
+      "status": 403
+    },
+    {
+      "name": "/manager/reportes → 200",
+      "status": 200
+    },
+    {
+      "name": "/api/me → 401",
+      "status": 401
+    },
+    {
+      "name": "Perfil USER",
+      "status": 200
+    },
+    {
+      "name": "Perfil ADMIN",
+      "status": 200
+    },
+    {
+      "name": "Perfil MANAGER",
+      "status": 200
+    },
+    {
+      "name": "Contraseña original de user rechazada",
+      "status": 401
+    },
+    {
+      "name": "Contraseña original de admin rechazada",
+      "status": 401
+    },
+    {
+      "name": "Clave incorrecta de manager rechazada",
+      "status": 401
+    },
+    {
+      "name": "Usuario inexistente rechazado",
+      "status": 401
+    },
+    {
+      "name": "/public/hello → 404",
+      "status": 404
+    },
+    {
+      "name": "/user/dashboard → 404",
+      "status": 404
+    },
+    {
+      "name": "/admin/panel → 404",
+      "status": 404
+    }
+  ]
+}
